@@ -1,0 +1,1 @@
+WebBindingInitializer进行全局初始化，然后DefaultDataBinderFactory提供扩展点initBinder以供进一步初始化（@InitBinder注解）
