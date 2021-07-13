@@ -1,0 +1,13 @@
+ThreadLocal
+
+每个Thread拥有一个Entry数组，每个数组元素是ThreadLocal和Object的键值对(Map的简易实现方式)；每个ThreadLocal的hashCode用来计算数组下标。这样，一个ThreadLocal可以同时存在于多个Thread中，一个Thread里存在许多不同的ThreaLocal作为唯一key的Entry。做到了多对多。
+
+ThreadLocal由WeakReference持有的原因：由于ThreadLocal是由开发者声明的，这些ThreadLocal并不一定存在于应用整个生命周期中，因此如果不是WeakReference，即使开发者不想要自己声明的ThreadLocal了，在Thread的Entry中依然持有强引用，造成内存泄漏（除非那些Thread被销毁）。
+
+WeakReference的设计不需要开发者手动去管理Thread里的ThreadLocal，同时也存在的隐患是从Entry里get的值有可能是脏数据（还没被垃圾回收），故新声明ThreadLocal时先set，用完remove是好习惯。
+
+
+
+InheritableThreadLocal
+
+在Thread的init函数将父线程的inheritableThreadLocals的值传递到子线程中，虽然Entry是新new的，但Object是父子同引用，多线程不安全；同时存在问题，init函数调用之前（即线程创建）存在的值可以传递到子线程中，之前不存在的，在后续的子线程启动时就再也传递不进去了。
