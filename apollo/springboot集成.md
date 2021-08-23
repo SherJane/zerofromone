@@ -1,0 +1,17 @@
+支持application.properties/bootstrap.properties配置，使配置在更早的阶段注入；
+
+通过apollo.bootstrap.eagerLoad.enabled=true可使Apollo的加载顺序放到日志系统之前（Apollo的启动过程无法通过日志输出）
+
+
+
+变量位置：PropertySourcesConstants
+
+ApolloAutoConfiguration的原理：
+
+注解驱动使用PropertySourcesProcessor，配置文件时使用ConfigPropertySourcesProcessor，通过@ConditionalOnMissingBean注解来实现当不是注解方式时就采用配置方式。
+
+ApplicationContextInitializer,父容器在ContextLoader#customizeContext调用(来自web.xml);web子容器在FrameworkServlet#applyInitializers调用();SpringBoot在SpringApplication#applyInitializers调用(来自META-INF/spring.factories文件)。
+
+
+
+EnableApolloConfig，注册了PropertySourcesPlaceholderConfigurer、PropertySourcesProcessor、ApolloAnnotationProcessor、SpringValueProcessor、SpringValueDefinitionProcessor、ApolloJsonValueProcessor。

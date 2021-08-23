@@ -1,0 +1,9 @@
+ErrorMvcAutoConfiguration进行配置
+
+（用了不少ConditionalOnXXX注解）
+
+注入ErrorPageCustomizer（ErrorPageRegistrar）。
+
+ErrorPageRegistrarBeanPostProcessor在ErrorPageRegistry初始化前执行registerErrorPages操作(ErrorPageFilter实现了ErrorPageRegistry，将错误请求转到controller)
+
+默认由BasicErrorController来处理
