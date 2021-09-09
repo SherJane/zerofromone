@@ -1,0 +1,47 @@
+client start
+
+Eureka Client做的事：
+
+1、服务注册(Register)
+
+2、服务续约(Renew)
+
+定期默认30s发送心跳，Eureka Server若90s未收到心跳，将移除client实例
+
+3、服务注册列表获取(Fetch)
+
+本地缓存，定期默认30s更新
+
+4、服务下线(Cancel)
+
+EnableDiscoveryClient注解委托EnableDiscoveryClientImportSelector引入相关类，autoRegister=true时引入AutoServiceRegistrationConfiguration，否则引入META_INF/spring.factories内配置类。
+
+方式2中，EurekaDiscoveryClientConfiguration引入了EurekaDiscoveryClient、EurekaHealthCheckHandler。
+
+(spring-cloud-commons包下有一个DiscoveryClient，EurekaDiscoveryClient实现该接口，同时委托EurekaClient真正做事，而EurekaClient的默认实现是eureka-client包下的DiscoveryClient。两个DiscoveryClient须加以区别。)
+
+两个重要参数，shouldFetchRegistry(CacheRefreshThread定时拉取远程服务列表)，shouldRegisterWithEureka(HeartbeatThread定时心跳)
+
+
+
+客户端关闭时，DiscoveryClient#shutdown()方法。
+
+
+
+Eureka Server做的事
+
+1、维护服务注册信息列表
+
+2、接收来自Eureka Client的register、renew、cancel请求
+
+3、Eureka Server多节点之间的数据同步
+
+server start
+
+EnableEurekaServer注解引入Marker，Marker仅仅被EurekaServerAutoConfiguration类用于ConditionalOnBean判断，EurekaServerAutoConfiguration引入了一系列bean，启动配置类为EurekaServerInitializerConfiguration，最后EurekaServerBootstrap真正启动服务。
+
+在EurekaServerAutoConfiguration引入的Bean中，EurekaController用于dashboard页面；RefreshablePeerEurekaNodes用于Eureka Server多节点同步；PeerAwareInstanceRegistry用于处理Eureka Client的请求。
+
+Eureka使用jersey提供接口给客户端，在EurekaServerAutoConfiguration#jerseyApplication中扫描相关的resource（相当于springMvc的controller），相应的bean交由Spring管理。（具体启动的原理要看jersey，暂不知）
+
+EurekaServerConfig
