@@ -1,0 +1,9 @@
+RibbonAutoConfiguration，引入的重要类包括SpringClientFactory(管理ApplicationContext)、RibbonLoadBalancerClient(真正的负载均衡客户端)；
+
+（RibbonClientSpecification从哪来？RibbonClientConfigurationRegistrar类通过扫描RibbonClients注解来加入容器）
+
+LoadBalancerAutoConfiguration引入了一些辅助类。
+
+SpringClientFactory注入的RibbonClientConfiguration注入了客户端配置、负载均衡策略、ServerListFilter、ServerListUpdater等。
+
+ZoneAwareLoadBalancer的父类DynamicServerListLoadBalancer启动了定时任务更新upServerList。

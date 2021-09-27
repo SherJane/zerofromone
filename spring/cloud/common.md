@@ -1,0 +1,6 @@
+SpringCloud采用父子容器设计，会在 SpringBoot构建的容器(称之为应用容器）之上创建一父容器 Bootstrap Application Context (原因：SpringCloud 作为一个微服务框架，需要使用全局的配置中心，而配置中心的配置是可以提供给应用容器的，所以在应用容器初始化和实例化Bean之前需要先完成配置中心的实例化，这个任务就由Bootstrap Application Context 来完成，而配置中心的相关配置属性就从bootstrap.properties或bootstrap.yml文件中读取).
+但要注意的是，在Bootstrap Application Context 启动工作完成之后，其从bootstrap.properties或bootstrap.yml文件中读取的配置，是会被应用容器对应的application.properties或yml文件中的同名属性覆盖的。
+
+<https://www.cnblogs.com/hzhuxin/p/10496762.html>
+
+Spring Cloud基于Spring Boot启动，当Spring Boot读取Spring-cloud-context下的META-INF/spring.factories,BootstrapApplicationListener会创建一个新的Context(所谓的BootstrapContext)作为Spring Boot Context的父容器。创建过程中通过添加BootstrapImportSelectorConfiguration实现了BootstrapContext的相关bean注入（来自spring.factories文件的#Bootstrap components部分，key为注解BootstrapConfiguration的名称）
