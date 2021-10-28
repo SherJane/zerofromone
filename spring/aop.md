@@ -1,0 +1,1 @@
+AOP，一种编程范式，两个框架Spring AOP（运行时增强，故static和final无法增强）和Aspectj（编译时增强）。

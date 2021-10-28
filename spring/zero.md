@@ -1,0 +1,10 @@
+日志
+
+
+
+全局异常处理
+
+@ResponseBody，由RequestResponseBodyMethodProcessor处理，最终还是交由HttpMessageConverter（是哪个？看到选择的过程在父类里，RequestResponseBodyMethodProcessor子类的作用是？）。
+
+@ControllerAdvice，RequestMappingHandlerAdapter注入时通过afterPropertiesSet方法初始化（找出所有被ControllerAdvice注解的类，包装成ControllerAdviceBean），处理了@ModelAttribute、@InitBinder、RequestBodyAdvice、ResponseBodyAdvice；类似的，ExceptionHandlerExceptionResolver处理了@ExceptionHandler、ResponseBodyAdvice。（DispatcherServlet#processHandlerException最终调用到相关方法）
+
